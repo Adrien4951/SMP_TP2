@@ -1,0 +1,78 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake: configurer",
+            "type": "process",
+            "command": "cmake",
+            "args": ["-S", ".", "-B", "build/linux", "-G", "Unix Makefiles", "-DCMAKE_BUILD_TYPE=Debug"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "windows": {
+                "command": "C:/Program Files/CMake/bin/cmake.exe",
+                "args": [
+                    "-S", ".", "-B", "build/windows", "-G", "MinGW Makefiles",
+                    "-DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/g++.exe",
+                    "-DCMAKE_MAKE_PROGRAM=C:/msys64/ucrt64/bin/mingw32-make.exe",
+                    "-DCMAKE_BUILD_TYPE=Debug"
+                ],
+                "options": {
+                    "cwd": "${workspaceFolder}",
+                    "env": { "PATH": "C:\\msys64\\ucrt64\\bin;${env:PATH}" }
+                }
+            },
+            "osx": {
+                "args": ["-S", ".", "-B", "build/macos", "-G", "Unix Makefiles", "-DCMAKE_BUILD_TYPE=Debug"],
+                "options": {
+                    "cwd": "${workspaceFolder}",
+                    "env": { "PATH": "/opt/homebrew/bin:/usr/local/bin:${env:PATH}" }
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "CMake: compiler",
+            "type": "process",
+            "command": "cmake",
+            "args": ["--build", "build/linux"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "windows": {
+                "command": "C:/Program Files/CMake/bin/cmake.exe",
+                "args": ["--build", "build/windows"],
+                "options": {
+                    "cwd": "${workspaceFolder}",
+                    "env": { "PATH": "C:\\msys64\\ucrt64\\bin;${env:PATH}" }
+                }
+            },
+            "osx": {
+                "args": ["--build", "build/macos"],
+                "options": {
+                    "cwd": "${workspaceFolder}",
+                    "env": { "PATH": "/opt/homebrew/bin:/usr/local/bin:${env:PATH}" }
+                }
+            },
+            "dependsOn": "CMake: configurer",
+            "problemMatcher": ["$gcc"],
+            "group": "build"
+        },
+        {
+            "label": "Compiler et exécuter",
+            "type": "process",
+            "command": "${workspaceFolder}/build/linux/tp2",
+            "options": { "cwd": "${workspaceFolder}" },
+            "windows": {
+                "command": "${workspaceFolder}/build/windows/tp2.exe",
+                "options": {
+                    "cwd": "${workspaceFolder}",
+                    "env": { "PATH": "C:\\msys64\\ucrt64\\bin;${env:PATH}" }
+                }
+            },
+            "osx": {
+                "command": "${workspaceFolder}/build/macos/tp2"
+            },
+            "dependsOn": "CMake: compiler",
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "focus": true, "panel": "dedicated", "clear": true },
+            "group": { "kind": "build", "isDefault": true }
+        }
+    ]
+}
